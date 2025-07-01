@@ -1,0 +1,18 @@
+{% extends "base_seller.html" %}
+{% block title %}Add Product - Grocery Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="mt-3">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Save Product
+            </button>
+            <a href="{% url 'manage_products' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

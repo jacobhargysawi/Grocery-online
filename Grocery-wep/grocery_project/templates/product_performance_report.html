@@ -1,0 +1,120 @@
+{% extends "base_seller.html" %}
+{% block title %}Product Performance Report{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3><i class="fas fa-chart-line text-info"></i> Product Performance Report</h3>
+        <a href="{% url 'add_product_performance' %}" class="btn btn-info btn-sm shadow-sm">
+            <i class="fas fa-plus-circle"></i> Add Product Performance Report
+        </a>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    Top 5 Products by Sales
+                </div>
+                <div class="card-body">
+                    <canvas id="salesBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white text-center">
+                    Quantity Sold Distribution
+                </div>
+                <div class="card-body">
+                    <canvas id="quantityPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <table class="table table-striped table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Date</th>
+                <th>Total Sales</th>
+                <th>Quantity Sold</th>
+                <th>Avg. Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.product.name }}</td>
+                <td>{{ report.report_date|date:"Y-m-d" }}</td>
+                <td>${{ report.total_sales }}</td>
+                <td>{{ report.total_quantity_sold }}</td>
+                <td>{{ report.average_rating }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No performance reports available.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Charts -->
+<script>
+    const labels = [{% for report in reports|slice:":5" %}'{{ report.product.name }}',{% endfor %}];
+
+    const salesData = {
+        labels: labels,
+        datasets: [{
+            label: 'Total Sales ($)',
+            data: [{% for report in reports|slice:":5" %}{{ report.total_sales }},{% endfor %}],
+            backgroundColor: 'rgba(54, 162, 235, 0.7)'
+        }]
+    };
+
+    const quantityData = {
+        labels: labels,
+        datasets: [{
+            label: 'Quantity Sold',
+            data: [{% for report in reports|slice:":5" %}{{ report.total_quantity_sold }},{% endfor %}],
+            backgroundColor: [
+                '#007bff', '#ffc107', '#28a745', '#dc3545', '#17a2b8'
+            ]
+        }]
+    };
+
+    new Chart(document.getElementById('salesBarChart'), {
+        type: 'bar',
+        data: salesData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Top 5 Products by Total Sales'
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('quantityPieChart'), {
+        type: 'pie',
+        data: quantityData,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Product Share by Quantity Sold'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base_seller.html" %}
+{% load static %}
+
+{% block title %}Stock & Profit Overview{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3 class="mb-4"><i class="fas fa-chart-line"></i> Stock & Profit Overview</h3>
+
+    {% if product_data %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Cost</th>
+                    <th>Original Quantity</th>
+                    <th>Sold</th>
+                    <th>Remaining Stock</th>
+                    <th>Total Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in product_data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>${{ product.price|floatformat:2 }}</td>
+                    <td>${{ product.cost|floatformat:2 }}</td>
+                    <td>{{ product.stock_quantity }}</td>  {# Original quantity, untouched #}
+                    <td>{{ product.sold|default_if_none:0 }}</td>
+                    <td>
+                        {% if product.remaining_stock < 0 %}
+                            <span class="text-danger fw-bold">0</span>
+                        {% else %}
+                            {{ product.remaining_stock }}
+                        {% endif %}
+                    </td>
+                    <td class="text-success">
+                        ${{ product.profit|floatformat:2 }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7" class="text-end fw-bold">Total Profit</td>
+                    <td class="text-success fw-bold">
+                        ${{ total_profit|floatformat:2 }}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle"></i> No products to display.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

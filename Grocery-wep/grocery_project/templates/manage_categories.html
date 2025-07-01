@@ -1,0 +1,75 @@
+{% extends "base_seller.html" %}
+{% load static %}
+
+{% block title %}Manage Categories - Grocery Management{% endblock %}
+
+{% block content %}
+<style>
+    .table th {
+        background-color: #000031;
+        color: white;
+        text-align: center;
+    }
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .form-inline {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+    .btn-edit {
+        background-color: #ffc107;
+        color: black;
+    }
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-tags"></i> Manage Categories</h2>
+        <a href="{% url 'add_category' %}" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Add Category
+        </a>
+    </div>
+
+    <!-- Search bar -->
+    <form method="get" class="form-inline">
+        <input type="text" name="q" class="form-control" placeholder="Search category..." value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.description|default:"—" }}</td>
+                    <td>
+                        <a href="{% url 'update_category' category.id %}" class="btn btn-sm btn-edit"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="{% url 'delete_category' category.id %}" class="btn btn-sm btn-delete" onclick="return confirm('Delete this category?')"><i class="fas fa-trash-alt"></i> Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No categories found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

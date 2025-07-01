@@ -1,0 +1,13 @@
+{% extends "base_seller.html" %}
+{% block title %}Delete Category - Grocery Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h4>Are you sure you want to delete <strong>{{ category.name }}</strong>?</h4>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Yes, Delete</button>
+        <a href="{% url 'manage_categories' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

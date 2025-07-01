@@ -1,0 +1,16 @@
+{% extends "customer_master.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>{{ product.name }}</h2>
+    <img src="{{ product.image_url.url }}" onerror="this.src='{% static 'images/default-product.jpg' %}'" class="img-fluid my-3" style="max-height: 300px;">
+    <p class="lead">${{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success mt-3">
+        <i class="fas fa-cart-plus"></i> Add to Cart
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base_seller.html" %}
+{% block title %}Confirm Delete{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h4>Are you sure you want to delete <strong>{{ product.name }}</strong>?</h4>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Yes, Delete</button>
+        <a href="{% url 'manage_products' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

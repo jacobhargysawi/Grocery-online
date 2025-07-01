@@ -1,0 +1,123 @@
+{% extends "base_seller.html" %}
+{% load static %}
+
+{% block title %}Audit Report — Seller Panel{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+  <div class="card-header bg-dark text-white">
+    <h4 class="mb-0"><i class="fas fa-search"></i> Audit Report</h4>
+  </div>
+  <div class="card-body">
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="text-center my-4" style="display: none;">
+      <i class="fas fa-spinner fa-spin fa-2x"></i>
+      <p>Auto-fixing missing items and unsold products...</p>
+    </div>
+
+    <!-- Success Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Global Fix Actions -->
+    <div class="mb-4 text-end d-flex justify-content-end gap-2">
+      <form method="post" action="{% url 'fix_all_missing_orders' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success btn-sm">
+          <i class="fas fa-hammer"></i> Fix All Paid Orders with Missing Items
+        </button>
+      </form>
+      <form method="post" action="{% url 'fix_all_unsold_products' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning btn-sm">
+          <i class="fas fa-plus-square"></i> Register All Unsold Products
+        </button>
+      </form>
+    </div>
+
+    <!-- Paid Orders Missing Items -->
+    <h5 class="text-danger mb-3"><i class="fas fa-receipt"></i> Paid Orders Missing Items</h5>
+    {% if empty_paid_orders %}
+      <ul class="list-group mb-4">
+        {% for order in empty_paid_orders %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>Order #{{ order.id }}</strong> — Total: ${{ order.total_amount }}
+            </div>
+            <form method="post" action="{% url 'fix_order_items' order.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-tools"></i> Fix Items
+              </button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-success">✅ All paid orders have their items.</div>
+    {% endif %}
+
+    <!-- Unsold Products -->
+    <h5 class="text-warning mt-4"><i class="fas fa-box-open"></i> Unsold Products</h5>
+    {% if unsold_products %}
+      <ul class="list-group">
+        {% for product in unsold_products %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ product.name }}</strong> — Stock: {{ product.stock_quantity }}
+            </div>
+            <form method="post" action="{% url 'fix_unsold_product' product.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-plus-circle"></i> Register Sale
+              </button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-success">✅ Every product has been sold in at least one paid order.</div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- Auto-Trigger Fix Actions -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Prevent infinite loop by checking session storage
+    if (sessionStorage.getItem("auditFixTriggered")) {
+      return;
+    }
+
+    document.getElementById("loadingSpinner").style.display = "block";
+
+    fetch("{% url 'fix_all_missing_orders' %}", { 
+      method: "POST", 
+      headers: { "X-CSRFToken": "{{ csrf_token }}" } 
+    })
+    .then(response => response.text())
+    .then(() => {
+      return fetch("{% url 'fix_all_unsold_products' %}", { 
+        method: "POST", 
+        headers: { "X-CSRFToken": "{{ csrf_token }}" } 
+      });
+    })
+    .then(response => response.text())
+    .then(() => {
+      document.getElementById("loadingSpinner").style.display = "none";
+      sessionStorage.setItem("auditFixTriggered", "true"); // Prevent re-triggering
+      location.reload();
+    })
+    .catch(error => {
+      console.error("Error auto-fixing:", error);
+      document.getElementById("loadingSpinner").style.display = "none";
+    });
+  });
+</script>
+
+{% endblock %}

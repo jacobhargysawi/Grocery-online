@@ -1,0 +1,66 @@
+{% extends "base_seller.html" %}
+{% load static %}
+
+{% block title %}All Customer Orders - Grocery Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <h2 class="mb-4"><i class="fas fa-clipboard-list"></i> All Customer Orders</h2>
+
+    {% if orders %}
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>ORD-{{ order.id|stringformat:"04d" }}</td>
+                    <td>{{ order.user.username }}</td>
+                    <td>${{ order.total_amount|floatformat:2 }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if order.order_status == 'Pending' %}bg-warning text-dark
+                            {% elif order.order_status == 'Approved' %}bg-success
+                            {% elif order.order_status == 'Rejected' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            {{ order.order_status }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if order.payment_status == 'Paid' %}bg-success
+                            {% elif order.payment_status == 'Pending' %}bg-warning text-dark
+                            {% else %}bg-danger{% endif %}">
+                            {{ order.payment_status }}
+                        </span>
+                    </td>
+                    <td>{{ order.order_date|date:"M d, Y H:i" }}</td>
+                    <td>
+                        {% if order.payment_status != "Paid" %}
+                            <a href="{% url 'mark_order_paid' order.id %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-check-circle"></i> Mark as Paid
+                            </a>
+                        {% else %}
+                            <span class="text-muted"><i class="fas fa-check-double"></i> Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No orders found.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

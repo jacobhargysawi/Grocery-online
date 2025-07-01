@@ -1,0 +1,40 @@
+{% extends "base_seller.html" %}
+{% block title %}Add Product Performance Report{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3><i class="fas fa-plus-circle text-info"></i> Add Product Performance Report</h3>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="report_date" class="form-label">Report Date:</label>
+                <input type="date" name="report_date" class="form-control" value="{{ today }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="product" class="form-label">Product:</label>
+                <select name="product" class="form-select" required>
+                    {% for product in seller_products %}
+                    <option value="{{ product.id }}">{{ product.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="total_sales" class="form-label">Total Sales ($):</label>
+                <input type="number" name="total_sales" step="0.01" class="form-control" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="total_quantity_sold" class="form-label">Total Quantity Sold:</label>
+                <input type="number" name="total_quantity_sold" class="form-control" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="average_rating" class="form-label">Average Rating (0–5):</label>
+                <input type="number" name="average_rating" step="0.01" min="0" max="5" class="form-control" required>
+            </div>
+        </div>
+        <div class="text-end">
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Save Report</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

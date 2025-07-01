@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - Grocery Management System{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<style>
+    body {
+        background: #001f3f;
+    }
+    .card:hover {
+        transform: scale(1.03);
+        transition: transform 0.3s ease;
+        z-index: 2;
+    }
+    .arrow {
+        cursor: pointer;
+        font-size: 2rem;
+        color: #ccc;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background-color: rgba(0,0,0,0.4);
+        padding: 5px 10px;
+        border-radius: 50%;
+        user-select: none;
+        transition: background-color 0.3s;
+    }
+    .arrow:hover {
+        background-color: rgba(255,255,255,0.7);
+        color: #001f3f;
+    }
+    .arrow-left { left: 5px; }
+    .arrow-right { right: 5px; }
+    .featured-arrow {
+        cursor: pointer;
+        font-size: 2rem;
+        color: #ccc;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        user-select: none;
+    }
+    .featured-arrow-left { left: -20px; }
+    .featured-arrow-right { right: -20px; }
+    .product-scroll-wrapper {
+        position: relative;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h1 class="text-white fw-bold">Welcome to Grocery Management System</h1>
+        <h5 class="text-light">Reliable Grocery Shopping</h5>
+        <div class="btn-group mt-3" role="group">
+            <a href="{% url 'admin_login' %}" class="btn btn-primary"><i class="fas fa-user-shield"></i> Admin</a>
+            <a href="{% url 'seller_login' %}" class="btn btn-secondary"><i class="fas fa-store"></i> Seller</a>
+            <a href="{% url 'customer_login' %}" class="btn btn-success"><i class="fas fa-user"></i> Customer</a>
+        </div>
+    </div>
+
+    {% if products %}
+    <div class="position-relative mb-5" style="max-width: 900px; margin: 0 auto;">
+        <i class="fas fa-chevron-left featured-arrow featured-arrow-left" onclick="slidePanel(-1)"></i>
+        <i class="fas fa-chevron-right featured-arrow featured-arrow-right" onclick="slidePanel(1)"></i>
+
+        <div class="bg-white shadow rounded p-4" id="featuredPanel" data-aos="zoom-in">
+            {% for product in products %}
+            <div class="row align-items-center featured-item" style="{% if not forloop.first %}display:none;{% endif %}">
+                <div class="col-md-5 text-center">
+                    <img src="{{ product.image_url.url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 250px; object-fit: cover;" onerror="this.onerror=null; this.src='{% static 'images/default-product.jpg' %}'">
+                </div>
+                <div class="col-md-7">
+                    <h3 class="text-primary fw-bold">{{ product.name }}</h3>
+                    <p class="text-success fw-semibold">${{ product.price|floatformat:2 }}</p>
+                    <p class="text-muted">Discover our best pick of the day, curated fresh for you.</p>
+                    <button class="btn btn-outline-primary" onclick="handleDetails({{ product.id }})">
+                        <i class="fas fa-eye"></i> More Details
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="bg-light p-3 rounded shadow-sm mb-4 product-scroll-wrapper">
+        <h3 class="text-center text-primary mb-3">Explore Our Products</h3>
+
+        {% if products %}
+        <i class="fas fa-chevron-left arrow arrow-left" onclick="scrollProduct(-1)"></i>
+        <i class="fas fa-chevron-right arrow arrow-right" onclick="scrollProduct(1)"></i>
+
+        <div id="productScroll" class="overflow-auto px-2" style="white-space: nowrap;">
+            {% for product in products %}
+            <div class="d-inline-block me-3 product-card" style="width: 260px;" data-aos="fade-up">
+                <div class="card shadow-sm h-100">
+                    <img src="{{ product.image_url.url }}" class="card-img-top" style="height: 160px; object-fit: cover;" onerror="this.onerror=null; this.src='{% static 'images/default-product.jpg' %}'" alt="{{ product.name }}">
+                    <div class="card-body text-center">
+                        <h6 class="card-title text-dark fw-bold">{{ product.name }}</h6>
+                        <p class="card-text text-success fw-semibold">${{ product.price|floatformat:2 }}</p>
+                        <button class="btn btn-outline-primary btn-sm mb-2" onclick="handleDetails({{ product.id }})">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" onclick="handleAddToCart(event, {{ product.id }})">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-muted">No products available at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init();
+    const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
+
+    function handleAddToCart(event, productId) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (!cart.includes(productId)) {
+            cart.push(productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        if (!isAuthenticated) {
+            window.location.href = "{% url 'customer_login' %}";
+        } else {
+            alert("Item added to cart!");
+        }
+    }
+
+    function handleDetails(productId) {
+        if (!isAuthenticated) {
+            window.location.href = "{% url 'customer_login' %}";
+        } else {
+            window.location.href = "/product/" + productId + "/";
+        }
+    }
+
+    function scrollProduct(direction) {
+        const scrollContainer = document.getElementById('productScroll');
+        const scrollAmount = 300;
+        scrollContainer.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+
+    let currentPanel = 0;
+    const items = document.querySelectorAll('.featured-item');
+    function slidePanel(dir) {
+        items[currentPanel].style.display = "none";
+        currentPanel = (currentPanel + dir + items.length) % items.length;
+        items[currentPanel].style.display = "flex";
+    }
+
+    // Sync cart after login
+    window.addEventListener('load', function () {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length > 0 && isAuthenticated) {
+            fetch('/cart/sync/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ items: cart })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('cart');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base_seller.html" %}
+{% block title %}Edit Product{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h3>Edit Product: {{ product.name }}</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-success" type="submit">Save</button>
+        <a href="{% url 'manage_products' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

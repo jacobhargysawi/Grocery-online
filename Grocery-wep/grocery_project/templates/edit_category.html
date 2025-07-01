@@ -1,0 +1,14 @@
+{% extends "base_seller.html" %}
+{% block title %}Edit Category - Grocery Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3>Edit Category: {{ category.name }}</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Update</button>
+        <a href="{% url 'manage_categories' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

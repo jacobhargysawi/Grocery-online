@@ -1,0 +1,30 @@
+{% extends "base_seller.html" %}
+{% block title %}Low Stock Products{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3><i class="fas fa-boxes text-warning"></i> Low Stock Products</h3>
+    <table class="table table-striped mt-3 text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Supplier</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.stock_quantity }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.supplier.name|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No low stock products.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

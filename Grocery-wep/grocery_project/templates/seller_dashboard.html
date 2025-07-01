@@ -1,0 +1,93 @@
+{% extends "base_seller.html" %}
+{% load static %}
+
+{% block title %}Seller Dashboard - Grocery Management{% endblock %}
+
+{% block content %}
+<style>
+    .card {
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 15px;
+        color: white;
+    }
+
+    .card-total-products .card-header {
+        background-color: #007bff;
+    }
+
+    .card-total-sales .card-header {
+        background-color: #28a745;
+    }
+
+    .card-low-stock .card-header {
+        background-color: #dc3545;
+    }
+
+    .btn-group a {
+        border-radius: 30px;
+        background-color: #17a2b8;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        margin-right: 10px;
+    }
+
+    .btn-group a:hover {
+        background-color: #138496;
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h2>Welcome, {{ seller_name }}!</h2>
+        <p>Your personalized dashboard is below.</p>
+    </div>
+
+    <div class="row">
+        <!-- Total Products -->
+        <div class="col-md-4">
+            <div class="card card-total-products">
+                <div class="card-header">Total Products</div>
+                <div class="card-body text-center">
+                    <h3>{{ total_products }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Sales -->
+        <div class="col-md-4">
+            <div class="card card-total-sales">
+                <div class="card-header">Total Sales</div>
+                <div class="card-body text-center">
+                    <h3>{{ total_sales }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Items -->
+        <div class="col-md-4">
+            <div class="card card-low-stock">
+                <div class="card-header">Low Stock Items</div>
+                <div class="card-body text-center">
+                    <h3>{{ low_stock_items }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="text-center mt-4 btn-group">
+        <a href="{% url 'pending_orders' %}"><i class="fas fa-clock"></i> Pending Orders</a>
+        <a href="{% url 'view_sales' %}"><i class="fas fa-chart-line"></i> View Sales</a>
+        <a href="{% url 'shipment' %}"><i class="fas fa-shipping-fast"></i> Shipment</a>
+    </div>
+</div>
+{% endblock %}

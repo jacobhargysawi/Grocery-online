@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Customer Registration - Grocery Management System{% endblock %}
+
+{% block content %}
+<style>
+    .register-wrapper {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card.register-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    .card.register-card:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    .card-header {
+        background: linear-gradient(90deg, #000031, #1a1a4b);
+        color: white;
+        border-bottom: none;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+    .form-control:focus {
+        border-color: #000031;
+        box-shadow: 0 0 6px rgba(0, 0, 50, 0.3);
+    }
+    .btn-primary {
+        background-color: #000031;
+        border-color: #000031;
+    }
+    .btn-primary:hover {
+        background-color: #1a1a4b;
+        border-color: #1a1a4b;
+        color: #fff;
+    }
+    .register-footer {
+        font-size: 0.85rem;
+        color: #666;
+    }
+</style>
+
+<div class="container register-wrapper">
+    <div class="col-md-7 col-lg-6">
+        <div class="card register-card">
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="fas fa-user-plus me-2"></i>Create Customer Account</h3>
+            </div>
+            <div class="card-body px-4 py-4">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label><i class="fas fa-user me-1"></i> Username</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="form-group mb-3">
+                        <label><i class="fas fa-envelope me-1"></i> Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group mb-3">
+                        <label><i class="fas fa-lock me-1"></i> Password</label>
+                        {{ form.password1 }}
+                    </div>
+                    <div class="form-group mb-3">
+                        <label><i class="fas fa-lock me-1"></i> Confirm Password</label>
+                        {{ form.password2 }}
+                    </div>
+                    <div class="form-group mb-3">
+                        <label><i class="fas fa-phone me-1"></i> Phone</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="form-group mb-4">
+                        <label><i class="fas fa-map-marker-alt me-1"></i> Address</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary fw-bold">
+                            <i class="fas fa-user-check me-1"></i> Register
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        Already have an account?
+                        <a href="{% url 'customer_login' %}"><strong>Login here</strong></a>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center register-footer">
+                <small>© 2025 Grocery Management System</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

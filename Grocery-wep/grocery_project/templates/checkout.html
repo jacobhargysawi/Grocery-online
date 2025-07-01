@@ -1,0 +1,51 @@
+{% extends "customer_master.html" %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4"><i class="fas fa-credit-card"></i> Checkout</h2>
+
+    {% if cart_items %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price (USD)</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.product.price|floatformat:2 }}</td>
+                        <td>${{ item.product.price|floatformat:2|add:"0"|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-6">
+                <div class="card p-3 shadow-sm bg-light">
+                    <h5>Subtotal: <strong>${{ subtotal|floatformat:2 }}</strong></h5>
+                    <form method="POST" action="{% url 'create_stripe_session' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success w-100 mt-3">
+                            <i class="fas fa-lock"></i> Pay Securely with Stripe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="alert alert-warning mt-4">Your cart is empty. <a href="{% url 'browse_products' %}">Go shopping</a> 🛒</p>
+    {% endif %}
+</div>
+{% endblock %}

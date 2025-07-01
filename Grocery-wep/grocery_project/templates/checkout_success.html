@@ -1,0 +1,12 @@
+{% extends "customer_master.html" %}
+{% block title %}Payment Complete{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="text-success">🎉 Payment Successful!</h2>
+    <p class="lead mt-3">Thank you, {{ user.first_name }} — your order has been placed and your payment is confirmed.</p>
+    <a href="{% url 'orders' %}" class="btn btn-primary mt-4">
+        View My Orders
+    </a>
+</div>
+{% endblock %}

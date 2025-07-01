@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Our Services{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #f9fdfb, #e6f4ed);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .section-box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s;
+    }
+
+    .section-box:hover {
+        transform: translateY(-4px);
+    }
+
+    .section-box h2, .section-box h3 {
+        color: #28a745;
+        margin-bottom: 20px;
+    }
+
+    .services-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .service-card {
+        background: #f8fdf9;
+        border: 1px solid #dff2e4;
+        border-radius: 10px;
+        padding: 25px;
+        width: 280px;
+        text-align: center;
+        transition: 0.3s ease;
+    }
+
+    .service-card:hover {
+        background: #eafaf0;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.1);
+    }
+
+    .service-card i {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        color: #28a745;
+    }
+
+    .service-card h4 {
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+
+    .service-card p {
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .team {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+    }
+
+    .team-member {
+        background: #ffffff;
+        padding: 25px;
+        width: 260px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        transition: 0.3s ease-in-out;
+    }
+
+    .team-member:hover {
+        transform: scale(1.05);
+        background-color: #eefaf1;
+    }
+
+    .team-member img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 12px;
+        border: 3px solid #28a745;
+    }
+
+    .team-member h3 {
+        color: #28a745;
+        margin-bottom: 5px;
+    }
+
+    .team-member p {
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .contact-section a {
+        color: #218838;
+        text-decoration: none;
+    }
+
+    .contact-section a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container">
+
+    <!-- Video Section (Smaller Width) -->
+    <section class="section-box text-center">
+        <h2 class="mb-4">Watch How It Works</h2>
+        <div style="max-width: 720px; margin: 0 auto;">
+            <div class="ratio ratio-16x9">
+                <video controls poster="{% static 'images/food.jpg' %}">
+                    <source src="{% static 'images/Home_ved.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section-box">
+        <h2 class="text-center">What We Offer</h2>
+        <div class="services-list">
+            <div class="service-card">
+                <i class="fas fa-shopping-cart"></i>
+                <h4>Smart Order Management</h4>
+                <p>Track, manage, and update customer orders efficiently with real-time updates.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-box"></i>
+                <h4>Inventory Tracking</h4>
+                <p>Automatically adjusts stock levels and alerts you for low inventory.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-shipping-fast"></i>
+                <h4>Shipment Monitoring</h4>
+                <p>Follow orders from warehouse to doorstep with shipment tracking tools.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-lock"></i>
+                <h4>Secure Payments</h4>
+                <p>Handle transactions securely with integrated Stripe and payment validation.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-users"></i>
+                <h4>Customer Engagement</h4>
+                <p>Reach customers and provide support directly from your seller dashboard.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manager Highlight -->
+    <section class="section-box">
+        <h2 class="text-center">Meet Our Manager</h2>
+        <div class="team">
+            <div class="team-member">
+                <img src="{% static 'images/JACOB.jpg' %}" alt="Abdirahiim Ahmed">
+                <h3>Abdirahiim Ahmed</h3>
+                <p>CEO & Founder</p>
+                <p>Full-stack Developer & Cybersecurity Enthusiast</p>
+                <p>Experienced in Django, ASP.NET, SQL, and security tools like Kali Linux and Splunk.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section-box contact-section text-center">
+        <h3>Contact Us</h3>
+        <p>Phone: +252 633570744</p>
+        <p>Website: <a href="https://bulaale1.com/" target="_blank">bulaale1.com</a></p>
+        <p>GitHub: <a href="https://github.com/jacobhargysawi/" target="_blank">Visit Repository</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/abdirahiim-ahmed-334b49183" target="_blank">View Profile</a></p>
+    </section>
+</div>
+{% endblock %}

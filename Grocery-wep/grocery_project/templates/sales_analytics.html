@@ -1,0 +1,144 @@
+{% extends "base_seller.html" %}
+{% load static %}
+{% block title %}Sales Analytics - Grocery Management{% endblock %}
+
+{% block content %}
+<style>
+    .analytics-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        padding: 25px;
+        margin-bottom: 30px;
+        background-color: #ffffff;
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+    .card-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container mt-5 pt-3">
+    <h2 class="mb-4 text-center"><i class="fas fa-chart-line me-2"></i>Sales Analytics</h2>
+
+    <!-- Date Range Filter + Print Button -->
+    <form method="get" class="row row-cols-lg-auto g-2 align-items-end mb-4">
+        <div class="col">
+            <label for="start" class="form-label fw-bold">From:</label>
+            <input type="date" id="start" name="start_date" value="{{ start_date }}" class="form-control">
+        </div>
+        <div class="col">
+            <label for="end" class="form-label fw-bold">To:</label>
+            <input type="date" id="end" name="end_date" value="{{ end_date }}" class="form-control">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-filter me-1"></i> Filter Range
+            </button>
+        </div>
+        <div class="col">
+            <a href="{% url 'print_sales_report' %}?start_date={{ start_date }}&end_date={{ end_date }}" target="_blank" class="btn btn-outline-secondary">
+                <i class="fas fa-print me-1"></i> Create Report
+            </a>
+        </div>
+    </form>
+
+    <!-- Revenue Card -->
+    <div class="analytics-card">
+        <h5 class="card-title"><i class="fas fa-dollar-sign me-2"></i>Total Revenue</h5>
+        <p class="fs-3 text-success fw-bold">${{ total_revenue|floatformat:2 }}</p>
+    </div>
+
+    <!-- Range Sales Overview -->
+    <div class="analytics-card">
+        <h5 class="card-title"><i class="fas fa-calendar me-2"></i>Sales: {{ start_date }} to {{ end_date }}</h5>
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Pie: Revenue by Product -->
+    <div class="analytics-card">
+        <h5 class="card-title"><i class="fas fa-chart-pie me-2"></i>Profit by Product</h5>
+        <div class="chart-container">
+            <canvas id="profitPieChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Doughnut: Quantity by Product -->
+    <div class="analytics-card">
+        <h5 class="card-title"><i class="fas fa-circle-notch me-2"></i>Units Sold by Product</h5>
+        <div class="chart-container">
+            <canvas id="soldDoughnutChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Products List -->
+    <div class="analytics-card">
+        <h5 class="card-title"><i class="fas fa-box-open me-2"></i>Top Selling Products</h5>
+        <ul class="list-group">
+            {% for product in top_products %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ product.name }}
+                    <span class="badge bg-primary rounded-pill">{{ product.total_sold }}</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted text-center">No sales data available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('salesChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ dates|safe }},
+            datasets: [{
+                label: 'Total Revenue ($)',
+                data: {{ sales_data|safe }},
+                backgroundColor: '#007bff',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true } },
+            responsive: true
+        }
+    });
+
+    new Chart(document.getElementById('profitPieChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ category_labels|safe }},
+            datasets: [{
+                data: {{ category_sales|safe }},
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1']
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    new Chart(document.getElementById('soldDoughnutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ order_labels|safe }},
+            datasets: [{
+                data: {{ order_counts|safe }},
+                backgroundColor: ['#20c997', '#fd7e14', '#6610f2', '#e83e8c', '#17a2b8']
+            }]
+        },
+        options: {
+            cutout: '65%',
+            plugins: { legend: { position: 'bottom' } },
+            responsive: true
+        }
+    });
+</script>
+{% endblock %}

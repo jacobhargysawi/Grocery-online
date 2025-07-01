@@ -1,0 +1,72 @@
+{% extends "base_seller.html" %}
+{% block title %}Pending Orders - Grocery Management{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2><i class="fas fa-hourglass-half"></i> Pending Orders</h2>
+                </div>
+                <div class="card-body">
+                    {% if pending_orders %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Total Amount</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in pending_orders %}
+                                        <tr>
+                                            <td>{{ order.id }}</td>
+                                            <td>{{ order.user.username }}</td>
+                                            <td>${{ order.total_amount|floatformat:2 }}</td>
+                                            <td>{{ order.order_date|date:"M d, Y H:i" }}</td>
+                                            <td>
+                                                {% if order.order_status == "Pending" %}
+                                                    <span class="badge bg-warning text-dark">{{ order.order_status }}</span>
+                                                {% elif order.order_status == "Approved" %}
+                                                    <span class="badge bg-success">{{ order.order_status }}</span>
+                                                {% elif order.order_status == "Rejected" %}
+                                                    <span class="badge bg-danger">{{ order.order_status }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ order.order_status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'approve_order' order.id %}" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-check"></i> Approve
+                                                </a>
+                                                <a href="{% url 'reject_order' order.id %}" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-times"></i> Reject
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i> No pending orders at the moment.
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'seller_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

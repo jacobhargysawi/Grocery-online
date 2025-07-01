@@ -1,0 +1,116 @@
+{% extends "base_seller.html" %}
+{% block title %}Seller Dashboard Stats{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Seller Dashboard</h2>
+
+    <div class="row">
+        <!-- Total Orders -->
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-shopping-cart"></i> Total Orders
+                </div>
+                <div class="card-body">
+                    <h3>{{ total_orders }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Revenue -->
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-dollar-sign"></i> Total Revenue
+                </div>
+                <div class="card-body">
+                    <h3>${{ total_revenue|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Items -->
+        <div class="col-md-4">
+            <a href="{% url 'low_stock_products_list' %}" style="text-decoration: none;">
+                <div class="card text-center shadow-sm border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="fas fa-boxes"></i> Low Stock Items
+                    </div>
+                    <div class="card-body">
+                        <h3 class="text-warning">{{ low_stock }}</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Expired Products -->
+        <div class="col-md-4 mt-4">
+            <a href="{% url 'expired_products_list' %}" style="text-decoration: none;">
+                <div class="card text-center shadow-sm border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <i class="fas fa-exclamation-triangle"></i> Expired Products
+                    </div>
+                    <div class="card-body">
+                        <h3 class="text-danger">{{ expired_products }}</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Product Performance Report -->
+    <div class="col-md-12 mt-4">
+        <a href="{% url 'product_performance_report' %}" style="text-decoration: none;">
+            <div class="card border-info shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-chart-bar"></i> Product Performance Report
+                </div>
+                <div class="card-body row text-center">
+                    <div class="col-md-4">
+                        <p class="mb-1 fw-bold text-muted">Top Seller</p>
+                        <h5 class="text-success">{{ top_performer.product.name|default:"—" }}</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 fw-bold text-muted">Units Sold</p>
+                        <h5>{{ top_performer.total_quantity_sold|default:"—" }}</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 fw-bold text-muted">Avg. Rating</p>
+                        <h5>{{ top_performer.average_rating|default:"—" }}</h5>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card mt-5">
+        <div class="card-header"><i class="fas fa-receipt"></i> Recent Orders</div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>${{ order.total_amount|default:"—" }}</td>
+                        <td>{{ order.order_status }}</td>
+                        <td>{{ order.order_date|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4">No recent orders.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

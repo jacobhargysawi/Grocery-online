@@ -1,0 +1,30 @@
+{% extends "base_seller.html" %}
+{% block title %}Expired Products{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3><i class="fas fa-skull-crossbones text-danger"></i> Expired Products</h3>
+    <table class="table table-bordered table-hover mt-3 text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Expiry Date</th>
+                <th>Stock</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.expiry_date }}</td>
+                <td>{{ product.stock_quantity }}</td>
+                <td>{{ product.category.name }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No expired products at the moment.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

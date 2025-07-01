@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Seller Panel - Grocery Management{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #000031;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'seller_dashboard' %}"><i class="fas fa-store"></i> Seller Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'pending_orders' %}"><i class="fas fa-clock"></i> Pending Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_categories' %}"><i class="fas fa-tags"></i> Manage Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_products' %}"><i class="fas fa-boxes"></i> Manage Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_suppliers' %}"><i class="fas fa-truck"></i> Manage Suppliers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'sales_analytics' %}"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'seller_all_orders' %}"><i class="fas fa-clipboard-list"></i> All Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'stock_overview' %}"><i class="fas fa-chart-bar"></i> Stock & Profit</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'seller_stats_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Seller Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'view_sales' %}"><i class="fas fa-chart-line"></i> View Sales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'shipment' %}"><i class="fas fa-shipping-fast"></i> Shipment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'customer_info' %}"><i class="fas fa-user-friends"></i> Customer Info</a></li>
+                    
+                                <li class="nav-item">
+  <a class="nav-link" href="{% url 'view_contact_messages' %}">
+    <i class="fas fa-inbox"></i> Contact Messages
+  </a>
+</li>
+                    
+                    <li class="nav-item"><a class="nav-link text-danger" href="{% url 'seller_logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                
+    
+                </ul>
+
+                
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <footer class="text-center text-white" style="background-color: #000031; padding: 10px 0;">
+        <p>© 2025 Seller Panel. All rights reserved.</p>
+    </footer>
+</body>
+</html>
